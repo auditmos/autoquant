@@ -26,7 +26,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Volume filter
     vol_median = volume.rolling(50).median()
-    high_volume = volume > (vol_median * 1.1)
+    high_volume = volume > vol_median
 
     # Bollinger Bands (20, 2)
     bb_mid = close.rolling(20).mean()
@@ -82,6 +82,10 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
     signals[trend_up & (close > bb_upper) & (di_spread_smooth > 9) & strong_trend] = 1
+
+    # Volume spike entry (breakout detection)
+    volume_spike = volume > (vol_median * 2.0)
+    signals[trend_up & volume_spike & strong_trend & di_moderate_bullish] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
