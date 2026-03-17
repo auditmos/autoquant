@@ -25,8 +25,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     trend_up = close > sma50
 
     # Volume filter
-    vol_median = volume.rolling(50).median()
-    high_volume = volume > (vol_median * 0.8)
+    vol_median = volume.rolling(40).median()
+    high_volume = volume > vol_median
 
     # Bollinger Bands (20, 2)
     bb_mid = close.rolling(20).mean()
