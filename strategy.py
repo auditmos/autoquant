@@ -32,7 +32,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
     vol20 = daily_ret.rolling(20).std()
-    vol_median = vol20.rolling(126).median()  # 6-month median vol
+    vol_median = vol20.rolling(252).median()  # 1-year median vol
     extreme_vol = vol20 > (vol_median * 2.0)
 
     # ADX(14) with DI
@@ -61,8 +61,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     very_strong_trend = adx > 38
     di_moderate_bullish = di_spread > 6
 
-    # Smoothed DI for BB breakout (reduces noise)
-    di_spread_smooth = di_spread.rolling(3).mean()
+    # Smoothed DI for BB breakout (EMA for faster response)
+    di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
 
     signals = pd.Series(0, index=df.index)
 
