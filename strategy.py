@@ -18,10 +18,15 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     close = df["close"]
     high = df["high"]
     low = df["low"]
+    volume = df["volume"]
 
     # Trend filter
     sma50 = close.rolling(50).mean()
     trend_up = close > sma50
+
+    # Volume filter
+    vol_median = volume.rolling(50).median()
+    high_volume = volume > vol_median
 
     # Bollinger Bands (20, 2)
     bb_mid = close.rolling(20).mean()
@@ -61,23 +66,16 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     very_strong_trend = adx > 39
     di_moderate_bullish = di_spread > 6
 
-    # Tertiary: extreme ADX, minimal DI
-    extreme_trend = adx > 45
-    di_weak_bullish = di_spread > 4
-
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
 
     signals = pd.Series(0, index=df.index)
 
-    # Primary: DI spread + uptrend + ADX confirmation
-    signals[trend_up & strong_trend & di_strong_bullish] = 1
+    # Primary: DI spread + uptrend + ADX confirmation + volume
+    signals[trend_up & strong_trend & di_strong_bullish & high_volume] = 1
 
     # Secondary: strong ADX with moderate DI
     signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
-
-    # Tertiary: extreme ADX with weak DI
-    signals[trend_up & extreme_trend & di_weak_bullish] = 1
 
     # BB oversold bounce in uptrend
     signals[trend_up & (close < bb_lower)] = 1
