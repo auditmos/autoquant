@@ -94,3 +94,4 @@ ebaedd1	0.699847	0.7238	-0.1665	discard	volume window 40 (was 50)
 eb1c3a8	0.619032	0.7702	-0.1645	discard	BB period 25 (was 20)
 aed320b	0.600072	0.7071	-0.1706	discard	volume threshold 1.1x median (was 1.0x)
 323fabf	0.604291	0.7505	-0.1721	discard	add volume spike entry (2x median + ADX + DI)
+654ec44	0.743826	0.7878	-0.1402	discard	BB dip-buy ADX>15 confirmation

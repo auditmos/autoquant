@@ -59,7 +59,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     adx = dx.rolling(14).mean()
 
     di_spread = plus_di - minus_di
-    di_strong_bullish = di_spread > 11.5
+    di_strong_bullish = di_spread > 11.0
     strong_trend = adx > 20
 
     # Secondary: very strong ADX, relaxed DI
@@ -77,8 +77,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Secondary: strong ADX with moderate DI
     signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
 
-    # BB oversold bounce in uptrend (with trend strength)
-    signals[trend_up & (close < bb_lower) & (adx > 15)] = 1
+    # BB oversold bounce in uptrend
+    signals[trend_up & (close < bb_lower)] = 1
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
     signals[trend_up & (close > bb_upper) & (di_spread_smooth > 9) & strong_trend] = 1
