@@ -58,11 +58,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     strong_trend = adx > 20
 
     # Secondary: very strong ADX, relaxed DI
-    very_strong_trend = adx > 38
+    very_strong_trend = adx > 39
     di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (EMA for faster response)
-    di_spread_smooth = di_spread.ewm(span=4, adjust=False).mean()
+    di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
 
     signals = pd.Series(0, index=df.index)
 
