@@ -86,3 +86,4 @@ f31da40	0.727721	0.9319	-0.1649	discard	tertiary ADX>45 DI>4 (consistency droppe
 2c5287d	0.738771	0.7949	-0.1422	keep	volume>median on primary (NEW RECORD!)
 facdd3f	0.700130	0.8554	-0.1128	discard	volume on secondary (regression)
 04bbbf8	0.721711	0.7818	-0.1745	discard	volume 0.8x median (regression)
+82f6620	0.708220	0.7212	-0.1685	discard	volume window 40 (regression)
