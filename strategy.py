@@ -47,11 +47,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
         (low - close.shift(1)).abs()
     ], axis=1).max(axis=1)
 
-    atr14 = tr.rolling(14).mean()
-    plus_di = 100 * (plus_dm.rolling(14).mean() / atr14)
-    minus_di = 100 * (minus_dm.rolling(14).mean() / atr14)
+    atr12 = tr.rolling(12).mean()
+    plus_di = 100 * (plus_dm.rolling(12).mean() / atr12)
+    minus_di = 100 * (minus_dm.rolling(12).mean() / atr12)
     dx = 100 * ((plus_di - minus_di).abs() / (plus_di + minus_di).replace(0, np.nan))
-    adx = dx.rolling(14).mean()
+    adx = dx.rolling(12).mean()
 
     di_spread = plus_di - minus_di
     di_strong_bullish = di_spread > 12
@@ -70,7 +70,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     signals[trend_up & strong_trend & di_strong_bullish] = 1
 
     # Secondary: strong ADX with moderate DI
-    # signals[trend_up & very_strong_trend & di_moderate_bullish] = 1  # Disabled to test simplicity
+    signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
 
     # BB oversold bounce in uptrend
     signals[trend_up & (close < bb_lower)] = 1
