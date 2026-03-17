@@ -29,11 +29,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     bb_lower = bb_mid - 2 * bb_std
     bb_upper = bb_mid + 2 * bb_std
 
-    # Volatility regime: 20-day realized vol
+    # Volatility regime: 15-day realized vol
     daily_ret = close.pct_change()
-    vol20 = daily_ret.rolling(20).std()
-    vol_median = vol20.rolling(252).median()  # 1-year median vol
-    extreme_vol = vol20 > (vol_median * 2.0)
+    vol15 = daily_ret.rolling(15).std()
+    vol_median = vol15.rolling(252).median()  # 1-year median vol
+    extreme_vol = vol15 > (vol_median * 2.0)
 
     # ADX(14) with DI
     plus_dm = high.diff()
@@ -47,11 +47,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
         (low - close.shift(1)).abs()
     ], axis=1).max(axis=1)
 
-    atr12 = tr.rolling(12).mean()
-    plus_di = 100 * (plus_dm.rolling(12).mean() / atr12)
-    minus_di = 100 * (minus_dm.rolling(12).mean() / atr12)
+    atr14 = tr.rolling(14).mean()
+    plus_di = 100 * (plus_dm.rolling(14).mean() / atr14)
+    minus_di = 100 * (minus_dm.rolling(14).mean() / atr14)
     dx = 100 * ((plus_di - minus_di).abs() / (plus_di + minus_di).replace(0, np.nan))
-    adx = dx.rolling(12).mean()
+    adx = dx.rolling(14).mean()
 
     di_spread = plus_di - minus_di
     di_strong_bullish = di_spread > 12
