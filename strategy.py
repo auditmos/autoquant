@@ -20,8 +20,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     low = df["low"]
 
     # Trend filter
-    sma45 = close.rolling(45).mean()
-    trend_up = close > sma45
+    sma50 = close.rolling(50).mean()
+    trend_up = close > sma50
 
     # Bollinger Bands (20, 2)
     bb_mid = close.rolling(20).mean()
@@ -62,7 +62,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (reduces noise)
-    di_spread_smooth = di_spread.rolling(3).mean()
+    di_spread_smooth = di_spread.rolling(2).mean()
 
     signals = pd.Series(0, index=df.index)
 
