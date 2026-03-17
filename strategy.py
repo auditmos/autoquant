@@ -23,11 +23,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     sma50 = close.rolling(50).mean()
     trend_up = close > sma50
 
-    # Bollinger Bands (20, 2)
+    # Bollinger Bands (20, 1.8)
     bb_mid = close.rolling(20).mean()
     bb_std = close.rolling(20).std()
-    bb_lower = bb_mid - 2 * bb_std
-    bb_upper = bb_mid + 2 * bb_std
+    bb_lower = bb_mid - 1.8 * bb_std
+    bb_upper = bb_mid + 1.8 * bb_std
 
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
@@ -58,7 +58,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     strong_trend = adx > 20
 
     # Secondary: very strong ADX, relaxed DI
-    very_strong_trend = adx > 37
+    very_strong_trend = adx > 38
     di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (reduces noise)
