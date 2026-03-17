@@ -38,7 +38,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     daily_ret = close.pct_change()
     vol20 = daily_ret.rolling(20).std()
     vol_median = vol20.rolling(252).median()  # 1-year median vol
-    extreme_vol = vol20 > (vol_median * 2.0)
+    extreme_vol = vol20 > (vol_median * 2.1)
 
     # ADX(14) with DI
     plus_dm = high.diff()
@@ -59,7 +59,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     adx = dx.rolling(14).mean()
 
     di_spread = plus_di - minus_di
-    di_strong_bullish = di_spread > 11.0
+    di_strong_bullish = di_spread > 11.5
     strong_trend = adx > 20
 
     # Secondary: very strong ADX, relaxed DI
