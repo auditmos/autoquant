@@ -26,7 +26,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Volume filter
     vol_median = volume.rolling(50).median()
-    high_volume = volume > vol_median
+    high_volume = volume > (vol_median * 0.8)
 
     # Bollinger Bands (20, 2)
     bb_mid = close.rolling(20).mean()
@@ -74,8 +74,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Primary: DI spread + uptrend + ADX confirmation + volume
     signals[trend_up & strong_trend & di_strong_bullish & high_volume] = 1
 
-    # Secondary: strong ADX with moderate DI + volume
-    signals[trend_up & very_strong_trend & di_moderate_bullish & high_volume] = 1
+    # Secondary: strong ADX with moderate DI
+    signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
 
     # BB oversold bounce in uptrend
     signals[trend_up & (close < bb_lower)] = 1
