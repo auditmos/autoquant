@@ -62,7 +62,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (EMA for faster response)
-    di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
+    di_spread_smooth = di_spread.ewm(span=2, adjust=False).mean()
 
     signals = pd.Series(0, index=df.index)
 
