@@ -8,10 +8,11 @@ import numpy as np
 
 
 def strategy(df: pd.DataFrame) -> pd.Series:
-    """Long-only: SMA50 + ADX/DI(12) + BB + volatility regime filter.
+    """Long-only: SMA50 + multi-entry ADX/DI + BB breakout + vol filter.
 
-    Core: SMA50 trend + ADX>20 + DI spread>12.
-    BB for dip-buying in uptrend.
+    Primary: SMA50 trend + ADX>20 + DI spread>12
+    Secondary: ADX>36 + DI>6 (strong trend, relaxed directional)
+    BB dip-buy + BB upper breakout for momentum
     Regime: Go flat when realized vol is extreme (> 2x median).
     """
     close = df["close"]
@@ -26,6 +27,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     bb_mid = close.rolling(20).mean()
     bb_std = close.rolling(20).std()
     bb_lower = bb_mid - 2 * bb_std
+    bb_upper = bb_mid + 2 * bb_std
 
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
@@ -52,16 +54,26 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     adx = dx.rolling(14).mean()
 
     di_spread = plus_di - minus_di
-    di_strong_bullish = di_spread > 10
+    di_strong_bullish = di_spread > 12
     strong_trend = adx > 20
+
+    # Secondary: very strong ADX, relaxed DI
+    very_strong_trend = adx > 36
+    di_moderate_bullish = di_spread > 6
 
     signals = pd.Series(0, index=df.index)
 
     # Primary: DI spread + uptrend + ADX confirmation
     signals[trend_up & strong_trend & di_strong_bullish] = 1
 
+    # Secondary: strong ADX with moderate DI
+    signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
+
     # BB oversold bounce in uptrend
     signals[trend_up & (close < bb_lower)] = 1
+
+    # BB upper breakout (momentum entry)
+    signals[trend_up & (close > bb_upper) & (di_spread > 8)] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
