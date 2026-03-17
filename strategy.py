@@ -59,7 +59,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     adx = dx.rolling(14).mean()
 
     di_spread = plus_di - minus_di
-    di_strong_bullish = di_spread > 11.25
+    di_strong_bullish = di_spread > 11.5
 
     # Smoothed ADX
     adx_smooth = adx.ewm(span=3, adjust=False).mean()
@@ -74,8 +74,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     signals = pd.Series(0, index=df.index)
 
-    # Primary: DI spread + uptrend + ADX confirmation + volume
-    signals[trend_up & strong_trend & di_strong_bullish & high_volume] = 1
+    # Primary: DI spread + uptrend + ADX confirmation
+    signals[trend_up & strong_trend & di_strong_bullish] = 1
 
     # Secondary: strong ADX with moderate DI
     signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
