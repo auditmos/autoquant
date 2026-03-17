@@ -62,7 +62,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (reduces noise)
-    di_spread_smooth = di_spread.rolling(4).mean()
+    di_spread_smooth = di_spread.rolling(3).mean()
 
     signals = pd.Series(0, index=df.index)
 
@@ -79,7 +79,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     signals[trend_up & (close > bb_upper) & (di_spread_smooth > 9) & strong_trend] = 1
 
     # Go flat during extreme volatility
-    signals[extreme_vol] = 0
+    # signals[extreme_vol] = 0  # Disabled to test impact
 
     return signals
 
