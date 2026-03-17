@@ -64,7 +64,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Secondary: very strong ADX, relaxed DI
     very_strong_trend = adx > 39
-    di_moderate_bullish = di_spread > 6
+    di_moderate_bullish = di_spread > 6.5
 
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
@@ -81,7 +81,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     signals[trend_up & (close < bb_lower)] = 1
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 9.5) & strong_trend] = 1
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 9) & strong_trend] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0

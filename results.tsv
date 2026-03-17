@@ -99,3 +99,4 @@ aed320b	0.600072	0.7071	-0.1706	discard	volume threshold 1.1x median (was 1.0x)
 67059a3	0.734035	0.7996	-0.1402	discard	vol regime 2.1x (was 2.0x)
 6521b55	0.676137	0.7099	-0.1374	discard	BB upper breakout with volume filter
 8165af0	0.567968	0.7214	-0.1698	discard	remove BB dip-buy entry
+aeef76f	0.743870	0.7996	-0.1402	discard	BB breakout DI 9.5 (was 9)
