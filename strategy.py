@@ -23,9 +23,9 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     sma50 = close.rolling(50).mean()
     trend_up = close > sma50
 
-    # Bollinger Bands (18, 2)
-    bb_mid = close.rolling(18).mean()
-    bb_std = close.rolling(18).std()
+    # Bollinger Bands (20, 2)
+    bb_mid = close.rolling(20).mean()
+    bb_std = close.rolling(20).std()
     bb_lower = bb_mid - 2 * bb_std
     bb_upper = bb_mid + 2 * bb_std
 
@@ -33,7 +33,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     daily_ret = close.pct_change()
     vol20 = daily_ret.rolling(20).std()
     vol_median = vol20.rolling(252).median()  # 1-year median vol
-    extreme_vol = vol20 > (vol_median * 2.0)
+    extreme_vol = vol20 > (vol_median * 1.9)
 
     # ADX(14) with DI
     plus_dm = high.diff()
