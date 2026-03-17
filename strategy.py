@@ -23,9 +23,9 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     sma50 = close.rolling(50).mean()
     trend_up = close > sma50
 
-    # Bollinger Bands (20, 2)
-    bb_mid = close.rolling(20).mean()
-    bb_std = close.rolling(20).std()
+    # Bollinger Bands (18, 2)
+    bb_mid = close.rolling(18).mean()
+    bb_std = close.rolling(18).std()
     bb_lower = bb_mid - 2 * bb_std
     bb_upper = bb_mid + 2 * bb_std
 
@@ -55,7 +55,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     di_spread = plus_di - minus_di
     di_strong_bullish = di_spread > 12
-    strong_trend = adx > 19
+    strong_trend = adx > 20
 
     # Secondary: very strong ADX, relaxed DI
     very_strong_trend = adx > 39
