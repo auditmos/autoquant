@@ -43,3 +43,17 @@ a8039b3	0.589411	0.8407	-0.1607	discard	SMA50 pullback entry (hurt consistency)
 71fc107	0.613095	0.5525	-0.1675	discard	DI>11 (marginal gain, Sharpe drop)
 3b876e6	0.540037	0.6139	-0.2019	discard	ADX>18 (weak trends hurt DD and consistency)
 658bfb5	0.527086	0.6190	-0.1721	discard	EMA50 trend (fewer trades, less consistent)
+af1d91f	0.697143	0.8219	-0.1490	keep	add secondary ADX>36/DI>6 entry + BB upper breakout
+eaf6d10	0.707005	0.8572	-0.1490	keep	smooth DI(3) for BB breakout signal
+b4ac2cf	0.706590	0.8659	-0.1490	discard	BB breakout DI threshold 6 (was 8)
+36b6340	0.680880	0.9779	-0.1451	discard	secondary ADX threshold 32 (consistency crashed)
+e663dd5	0.674533	0.9289	-0.1413	discard	primary DI threshold 13 (consistency dropped)
+4fa5a22	0.706021	0.8572	-0.1490	discard	BB breakout DI threshold 10 (marginal regression)
+055b072	0.718617	0.8545	-0.1490	keep	BB breakout requires ADX>20 confirmation
+0063f91	0.722816	0.8214	-0.1611	keep	secondary ADX threshold 38 (consistency 0.90!)
+e9a638d	0.705555	0.9754	-0.1477	discard	secondary ADX 40 (too restrictive, consistency dropped)
+897a65e	0.710936	0.9726	-0.1592	discard	secondary DI 5 (consistency dropped)
+6199ab6	0.718890	0.7834	-0.1600	discard	secondary DI 7 (marginal regression)
+cf8c7fd	0.719021	0.8214	-0.1611	discard	BB breakout DI 7 (marginal regression)
+961a25d	0.723077	0.8214	-0.1611	keep	BB breakout DI threshold 9 (marginal improvement)
+d808032	0.711342	0.8214	-0.1611	discard	vol filter 2.2x (regression)
