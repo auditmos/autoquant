@@ -29,11 +29,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     bb_lower = bb_mid - 2 * bb_std
     bb_upper = bb_mid + 2 * bb_std
 
-    # Volatility regime: 15-day realized vol
+    # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
-    vol15 = daily_ret.rolling(15).std()
-    vol_median = vol15.rolling(252).median()  # 1-year median vol
-    extreme_vol = vol15 > (vol_median * 2.0)
+    vol20 = daily_ret.rolling(20).std()
+    vol_median = vol20.rolling(252).median()  # 1-year median vol
+    extreme_vol = vol20 > (vol_median * 2.0)
 
     # ADX(14) with DI
     plus_dm = high.diff()
@@ -61,6 +61,10 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     very_strong_trend = adx > 39
     di_moderate_bullish = di_spread > 6
 
+    # Tertiary: extreme ADX, minimal DI
+    extreme_trend = adx > 45
+    di_weak_bullish = di_spread > 4
+
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
 
@@ -71,6 +75,9 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Secondary: strong ADX with moderate DI
     signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
+
+    # Tertiary: extreme ADX with weak DI
+    signals[trend_up & extreme_trend & di_weak_bullish] = 1
 
     # BB oversold bounce in uptrend
     signals[trend_up & (close < bb_lower)] = 1
