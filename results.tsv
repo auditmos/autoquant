@@ -126,3 +126,4 @@ b9955d0	0.686151	0.7692	-0.1784	discard	SMA45 trend (was SMA50)
 3333ec7	0.758389	0.8152	-0.1631	discard	vol regime window 300 (was 252)
 bed0139	0.746635	0.8023	-0.1556	discard	primary DI 11.25 (was 11.5)
 a04ef4a	0.657195	0.8461	-0.1561	discard	remove volume filter from primary
+04d0414	0.682333	0.8714	-0.1411	discard	ADX period 13 (was 14)

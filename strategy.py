@@ -28,11 +28,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     vol_median = volume.rolling(60).median()
     high_volume = volume > vol_median
 
-    # Bollinger Bands (20, 2)
+    # Bollinger Bands (20, 2.1)
     bb_mid = close.rolling(20).mean()
     bb_std = close.rolling(20).std()
-    bb_lower = bb_mid - 2 * bb_std
-    bb_upper = bb_mid + 2 * bb_std
+    bb_lower = bb_mid - 2.1 * bb_std
+    bb_upper = bb_mid + 2.1 * bb_std
 
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
@@ -52,11 +52,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
         (low - close.shift(1)).abs()
     ], axis=1).max(axis=1)
 
-    atr13 = tr.rolling(13).mean()
-    plus_di = 100 * (plus_dm.rolling(13).mean() / atr13)
-    minus_di = 100 * (minus_dm.rolling(13).mean() / atr13)
+    atr14 = tr.rolling(14).mean()
+    plus_di = 100 * (plus_dm.rolling(14).mean() / atr14)
+    minus_di = 100 * (minus_dm.rolling(14).mean() / atr14)
     dx = 100 * ((plus_di - minus_di).abs() / (plus_di + minus_di).replace(0, np.nan))
-    adx = dx.rolling(13).mean()
+    adx = dx.rolling(14).mean()
 
     di_spread = plus_di - minus_di
     di_strong_bullish = di_spread > 11.5
