@@ -59,7 +59,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Secondary: very strong ADX, relaxed DI
     very_strong_trend = adx > 38
-    di_moderate_bullish = di_spread > 5
+    di_moderate_bullish = di_spread > 7
 
     # Smoothed DI for BB breakout (reduces noise)
     di_spread_smooth = di_spread.rolling(3).mean()
