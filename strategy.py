@@ -25,7 +25,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     trend_up = close > sma50
 
     # Volume filter
-    vol_median = volume.rolling(50).median()
+    vol_median = volume.rolling(40).median()
     high_volume = volume > vol_median
 
     # Bollinger Bands (20, 2)
@@ -63,7 +63,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     strong_trend = adx > 20
 
     # Secondary: very strong ADX, relaxed DI
-    very_strong_trend = adx > 40
+    very_strong_trend = adx > 39
     di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (EMA for faster response)
