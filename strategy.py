@@ -33,7 +33,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     daily_ret = close.pct_change()
     vol20 = daily_ret.rolling(20).std()
     vol_median = vol20.rolling(252).median()  # 1-year median vol
-    extreme_vol = vol20 > (vol_median * 1.9)
+    extreme_vol = vol20 > (vol_median * 2.0)
 
     # ADX(14) with DI
     plus_dm = high.diff()
@@ -70,7 +70,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     signals[trend_up & strong_trend & di_strong_bullish] = 1
 
     # Secondary: strong ADX with moderate DI
-    signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
+    # signals[trend_up & very_strong_trend & di_moderate_bullish] = 1  # Disabled to test simplicity
 
     # BB oversold bounce in uptrend
     signals[trend_up & (close < bb_lower)] = 1
