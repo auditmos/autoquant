@@ -21,8 +21,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     volume = df["volume"]
 
     # Trend filter
-    sma50 = close.rolling(50).mean()
-    trend_up = close > sma50
+    sma60 = close.rolling(60).mean()
+    trend_up = close > sma60
 
     # Volume filter
     vol_median = volume.rolling(50).median()
@@ -37,7 +37,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
     vol20 = daily_ret.rolling(20).std()
-    vol_median = vol20.rolling(200).median()  # ~8mo median vol
+    vol_median = vol20.rolling(252).median()  # 1-year median vol
     extreme_vol = vol20 > (vol_median * 2.0)
 
     # ADX(14) with DI
