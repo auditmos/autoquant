@@ -63,7 +63,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Smoothed ADX
     adx_smooth = adx.ewm(span=3, adjust=False).mean()
-    strong_trend = adx_smooth > 19
+    strong_trend = adx_smooth > 21
 
     # Secondary: very strong ADX, relaxed DI
     very_strong_trend = adx_smooth > 40
