@@ -62,7 +62,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (reduces noise)
-    di_spread_smooth = di_spread.rolling(2).mean()
+    di_spread_smooth = di_spread.rolling(4).mean()
 
     signals = pd.Series(0, index=df.index)
 
