@@ -76,7 +76,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     signals[trend_up & (close < bb_lower)] = 1
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 7) & strong_trend] = 1
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 9) & strong_trend] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
