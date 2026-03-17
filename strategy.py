@@ -21,16 +21,16 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     volume = df["volume"]
 
     # Trend filter
-    sma45 = close.rolling(45).mean()
-    trend_up = close > sma45
+    sma50 = close.rolling(50).mean()
+    trend_up = close > sma50
 
     # Volume filter
     vol_median = volume.rolling(60).median()
     high_volume = volume > vol_median
 
-    # Bollinger Bands (20, 2)
-    bb_mid = close.rolling(20).mean()
-    bb_std = close.rolling(20).std()
+    # Bollinger Bands (22, 2)
+    bb_mid = close.rolling(22).mean()
+    bb_std = close.rolling(22).std()
     bb_lower = bb_mid - 2 * bb_std
     bb_upper = bb_mid + 2 * bb_std
 
