@@ -20,9 +20,10 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     low = df["low"]
     volume = df["volume"]
 
-    # Trend filter
+    # Trend filter (dual: EMA20 + SMA51)
     sma50 = close.rolling(51).mean()
-    trend_up = close > sma50
+    ema20 = close.ewm(span=20, adjust=False).mean()
+    trend_up = (close > sma50) & (close > ema20)
 
     # Volume filter
     vol_median = volume.rolling(58).median()
@@ -88,10 +89,6 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
-
-    # Exit on DI bearish crossover (early trend reversal detection)
-    di_bearish = di_spread < 0
-    signals[di_bearish] = 0
 
     return signals
 
