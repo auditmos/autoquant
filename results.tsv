@@ -177,3 +177,4 @@ b7abbf9	0.786364	0.8356	-0.1538	discard	BB breakout DI 8.72 (was 8.7)
 640c085	0.678513	0.9995	-0.1687	discard	Add Williams %R oversold entry
 f5da4ac	0.786642	0.8356	-0.1538	keep	SMA51 trend filter (was 50)
 6c9e927	0.786642	0.8356	-0.1538	discard	BB breakout DI 8.65 (was 8.7)
+72d9530	0.757640	0.8270	-0.1560	discard	Secondary ADX 40.5 (was 40)
