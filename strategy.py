@@ -64,10 +64,9 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Smoothed ADX
     adx_smooth = adx.ewm(span=3, adjust=False).mean()
     strong_trend = adx_smooth > 20.1
-    adx_rising = adx_smooth > adx_smooth.shift(1)
 
-    # Secondary: very strong ADX, relaxed DI, rising momentum
-    very_strong_trend = adx_smooth > 40
+    # Secondary: very strong ADX, relaxed DI
+    very_strong_trend = adx_smooth > 39.5
     di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (EMA for faster response)
@@ -78,8 +77,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Primary: DI spread + uptrend + ADX confirmation + volume
     signals[trend_up & strong_trend & di_strong_bullish & high_volume] = 1
 
-    # Secondary: strong ADX with moderate DI and rising trend strength
-    signals[trend_up & very_strong_trend & di_moderate_bullish & adx_rising] = 1
+    # Secondary: strong ADX with moderate DI
+    signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
 
     # BB oversold bounce in uptrend
     signals[trend_up & (close < bb_lower)] = 1
