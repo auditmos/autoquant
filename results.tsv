@@ -285,3 +285,4 @@ b91751c	0.787261	0.8319	-0.1557	discard	Add seasonality filter (avoid Monday)
 082a47b	0.787261	0.8319	-0.1557	discard	Primary DI 11.52 (was 11.505)
 ace7e1a	0.787261	0.8319	-0.1557	discard	Multi: Primary DI 11.51 + Secondary DI 5.96 + BB DI 8.69
 8df266a	0.787261	0.8319	-0.1557	discard	Primary DI 11.54 (was 11.51)
+6d16268	0.776213	0.8319	-0.1557	discard	Secondary ADX 40.2 (was 40)
