@@ -62,8 +62,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     di_strong_bullish = di_spread > 11.5
 
     # Smoothed ADX
-    adx_smooth = adx.ewm(span=3, adjust=False).mean()
-    strong_trend = adx_smooth > 20.25
+    adx_smooth = adx.ewm(span=3.1, adjust=False).mean()
+    strong_trend = adx_smooth > 20
 
     # Secondary: very strong ADX, relaxed DI
     very_strong_trend = adx_smooth > 40
