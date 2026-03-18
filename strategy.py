@@ -28,9 +28,9 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     vol_median = volume.rolling(58).median()
     high_volume = volume > vol_median
 
-    # Bollinger Bands (20, 2)
-    bb_mid = close.rolling(20).mean()
-    bb_std = close.rolling(20).std()
+    # Bollinger Bands (19, 2)
+    bb_mid = close.rolling(19).mean()
+    bb_std = close.rolling(19).std()
     bb_lower = bb_mid - 2 * bb_std
     bb_upper = bb_mid + 2 * bb_std
 
@@ -72,10 +72,6 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
 
-    # Momentum spike detector
-    roc5 = (close / close.shift(5) - 1) * 100
-    momentum_spike = roc5 > 2.0
-
     signals = pd.Series(0, index=df.index)
 
     # Primary: DI spread + uptrend + ADX confirmation + volume
@@ -89,9 +85,6 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
     signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
-
-    # Momentum spike entry (strong upward move)
-    signals[trend_up & momentum_spike & (di_spread > 5)] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0

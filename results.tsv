@@ -238,3 +238,4 @@ f52b1e5	0.579138	0.7524	-0.1843	discard	Exit on DI bearish crossover
 a99f0b1	0.522612	0.5605	-0.1673	discard	Secondary requires rising ADX
 590c2d6	0.762959	0.8159	-0.1696	discard	Secondary ADX 39.5 (was 40)
 faaecb6	0.786937	0.8319	-0.1557	discard	Primary DI 11.51 (was 11.505)
+ac70f8a	0.521799	0.6065	-0.1881	discard	Add momentum spike entry (ROC5 > 2%)
