@@ -21,7 +21,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     volume = df["volume"]
 
     # Trend filter
-    sma50 = close.rolling(50).mean()
+    sma50 = close.rolling(49).mean()
     trend_up = close > sma50
 
     # Volume filter
@@ -67,7 +67,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Secondary: very strong ADX, relaxed DI
     very_strong_trend = adx_smooth > 40
-    di_moderate_bullish = di_spread > 5.9
+    di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
