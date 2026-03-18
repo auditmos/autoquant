@@ -207,3 +207,4 @@ b18f2da	0.764448	0.8155	-0.1633	discard	ADX EMA span 2.95 (was 3)
 83407fa	0.775594	0.8356	-0.1538	discard	Multi-param: DI 11.505, ADX 40.1, BB DI 8.705
 2d4e6a3	0.711352	0.8277	-0.1636	discard	Add ATR filter to secondary entry
 cef6805	0.786642	0.8356	-0.1538	discard	BB breakout DI 8.69 (was 8.7)
+815b09d	0.777634	0.8356	-0.1538	discard	Vol regime 1.99x (was 2.0x)
