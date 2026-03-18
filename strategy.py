@@ -28,9 +28,9 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     vol_median = volume.rolling(60).median()
     high_volume = volume > vol_median
 
-    # Bollinger Bands (20, 2)
-    bb_mid = close.rolling(20).mean()
-    bb_std = close.rolling(20).std()
+    # Bollinger Bands (19, 2)
+    bb_mid = close.rolling(19).mean()
+    bb_std = close.rolling(19).std()
     bb_lower = bb_mid - 2 * bb_std
     bb_upper = bb_mid + 2 * bb_std
 
@@ -62,7 +62,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     di_strong_bullish = di_spread > 11.5
 
     # Smoothed ADX
-    adx_smooth = adx.ewm(span=3.5, adjust=False).mean()
+    adx_smooth = adx.ewm(span=3, adjust=False).mean()
     strong_trend = adx_smooth > 20
 
     # Secondary: very strong ADX, relaxed DI
