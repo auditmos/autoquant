@@ -209,3 +209,4 @@ b18f2da	0.764448	0.8155	-0.1633	discard	ADX EMA span 2.95 (was 3)
 cef6805	0.786642	0.8356	-0.1538	discard	BB breakout DI 8.69 (was 8.7)
 815b09d	0.777634	0.8356	-0.1538	discard	Vol regime 1.99x (was 2.0x)
 627b278	0.786642	0.8356	-0.1538	discard	Primary DI 11.46 + BB DI 8.72
+543abfc	0.777634	0.8356	-0.1538	discard	Vol regime window 248 (was 252)
