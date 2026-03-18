@@ -279,3 +279,4 @@ b91751c	0.787261	0.8319	-0.1557	discard	Add seasonality filter (avoid Monday)
 4062080	0.787261	0.8319	-0.1557	discard	Regime switching: trend-following vs mean-reversion
 72b221c	0.579824	0.7524	-0.1843	discard	Remove BB dip-buy entry (simplify)
 5141aac	0.787261	0.8319	-0.1557	discard	Secondary DI 5.94 (was 5.95)
+35d739e	0.787261	0.8319	-0.1557	discard	Secondary DI 5.96 (was 5.95)
