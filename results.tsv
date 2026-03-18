@@ -219,3 +219,4 @@ d2debb4	0.758629	0.8345	-0.1538	discard	Add ROC(20) momentum filter to primary
 26afe09	0.786937	0.8319	-0.1557	discard	BB breakout DI 8.705 (was 8.7)
 04c98cc	0.785932	0.8319	-0.1557	discard	Primary ADX 20.05 (was 20.1)
 e7be8e9	0.777878	0.8319	-0.1557	discard	Volume window 59 (was 58)
+ddc0b01	0.786937	0.8319	-0.1557	discard	Primary DI 11.50 (was 11.505)
