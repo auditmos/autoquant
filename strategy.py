@@ -37,7 +37,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
     vol20 = daily_ret.rolling(20).std()
-    vol_median = vol20.rolling(252).median()  # 1-year median vol
+    vol_median = vol20.rolling(248).median()  # 1-year median vol
     extreme_vol = vol20 > (vol_median * 2.0)
 
     # ADX(14) with DI
@@ -59,7 +59,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     adx = dx.rolling(14).mean()
 
     di_spread = plus_di - minus_di
-    di_strong_bullish = di_spread > 11.46
+    di_strong_bullish = di_spread > 11.5
 
     # Smoothed ADX
     adx_smooth = adx.ewm(span=3, adjust=False).mean()
@@ -84,7 +84,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     signals[trend_up & (close < bb_lower)] = 1
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.72) & strong_trend] = 1
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
