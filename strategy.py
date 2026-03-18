@@ -8,11 +8,12 @@ import numpy as np
 
 
 def strategy(df: pd.DataFrame) -> pd.Series:
-    """Long-only: SMA50 + multi-entry ADX/DI + BB breakout + vol filter.
+    """Long-only: SMA50 + multi-entry ADX/DI + BB breakout + skip-month momentum.
 
     Primary: SMA50 trend + ADX>20 + DI spread>12
     Secondary: ADX>36 + DI>6 (strong trend, relaxed directional)
     BB dip-buy + BB upper breakout for momentum
+    NEW: Skip-month momentum filter (12-1 month return > 0)
     Regime: Go flat when realized vol is extreme (> 2x median).
     """
     close = df["close"]
@@ -23,6 +24,10 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Trend filter
     sma50 = close.rolling(51).mean()
     trend_up = close > sma50
+
+    # Skip-month momentum: 12-1 month performance
+    mom_12_1 = (close.shift(21) / close.shift(252)) - 1  # 21 days = ~1mo, 252 = ~1yr
+    positive_momentum = mom_12_1 > 0
 
     # Volume filter
     vol_median = volume.rolling(58).median()
@@ -74,17 +79,17 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     signals = pd.Series(0, index=df.index)
 
-    # Primary: DI spread + uptrend + ADX confirmation + volume
-    signals[trend_up & strong_trend & di_strong_bullish & high_volume] = 1
+    # Primary: DI spread + uptrend + ADX confirmation + volume + momentum
+    signals[trend_up & strong_trend & di_strong_bullish & high_volume & positive_momentum] = 1
 
-    # Secondary: strong ADX with moderate DI
-    signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
+    # Secondary: strong ADX with moderate DI + momentum
+    signals[trend_up & very_strong_trend & di_moderate_bullish & positive_momentum] = 1
 
-    # BB oversold bounce in uptrend
-    signals[trend_up & (close < bb_lower)] = 1
+    # BB oversold bounce in uptrend + momentum
+    signals[trend_up & (close < bb_lower) & positive_momentum] = 1
 
-    # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
+    # BB upper breakout (momentum entry with smoothed DI + ADX confirmation) + momentum
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend & positive_momentum] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
