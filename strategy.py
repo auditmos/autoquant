@@ -21,7 +21,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     volume = df["volume"]
 
     # Trend filter
-    sma50 = close.rolling(52).mean()
+    sma50 = close.rolling(50).mean()
     trend_up = close > sma50
 
     # Volume filter
@@ -84,7 +84,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     signals[trend_up & (close < bb_lower)] = 1
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.75) & strong_trend] = 1
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.6) & strong_trend] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
