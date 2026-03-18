@@ -62,7 +62,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     di_strong_bullish = di_spread > 11.5
 
     # Smoothed ADX
-    adx_smooth = adx.ewm(span=2.9, adjust=False).mean()
+    adx_smooth = adx.ewm(span=3, adjust=False).mean()
     strong_trend = adx_smooth > 20
 
     # Secondary: very strong ADX, relaxed DI
@@ -71,6 +71,14 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
+
+    # MACD(12, 26, 9) for momentum confirmation
+    ema12 = close.ewm(span=12, adjust=False).mean()
+    ema26 = close.ewm(span=26, adjust=False).mean()
+    macd_line = ema12 - ema26
+    macd_signal = macd_line.ewm(span=9, adjust=False).mean()
+    macd_histogram = macd_line - macd_signal
+    macd_bullish = macd_histogram > 0
 
     signals = pd.Series(0, index=df.index)
 
@@ -83,8 +91,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # BB oversold bounce in uptrend
     signals[trend_up & (close < bb_lower)] = 1
 
-    # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
+    # BB upper breakout (momentum entry with smoothed DI + ADX + MACD confirmation)
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend & macd_bullish] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
