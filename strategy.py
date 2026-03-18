@@ -72,6 +72,13 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
 
+    # CCI (Commodity Channel Index, 20)
+    tp = (high + low + close) / 3
+    sma_tp = tp.rolling(20).mean()
+    mad = (tp - sma_tp).abs().rolling(20).mean()
+    cci = (tp - sma_tp) / (0.015 * mad)
+    cci_oversold = cci < -100
+
     signals = pd.Series(0, index=df.index)
 
     # Primary: DI spread + uptrend + ADX confirmation + volume
@@ -84,7 +91,10 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     signals[trend_up & (close < bb_lower)] = 1
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.71) & strong_trend] = 1
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
+
+    # CCI oversold bounce in uptrend
+    signals[trend_up & cci_oversold & strong_trend] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
