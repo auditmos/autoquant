@@ -152,3 +152,4 @@ d1edb78	0.749825	0.8107	-0.1676	discard	SMA 52 (was 50)
 b2f571c	0.781521	0.8323	-0.1556	discard	vol regime window 240 (was 252)
 e78542d	0.764145	0.8323	-0.1556	discard	vol regime 1.98x (was 2.0x)
 3db2419	0.782357	0.8356	-0.1538	keep	BB breakout DI 8.8 + volume window 58
+cc982cb	0.757774	0.8551	-0.1524	discard	volume window 56 (was 58)
