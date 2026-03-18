@@ -8,12 +8,13 @@ import numpy as np
 
 
 def strategy(df: pd.DataFrame) -> pd.Series:
-    """Long-only: SMA50 + multi-entry ADX/DI + BB breakout + vol filter.
+    """Long-only: SMA50 + multi-entry ADX/DI + BB breakout + ATR position sizing.
 
     Primary: SMA50 trend + ADX>20 + DI spread>12
     Secondary: ADX>36 + DI>6 (strong trend, relaxed directional)
     BB dip-buy + BB upper breakout for momentum
     Regime: Go flat when realized vol is extreme (> 2x median).
+    NEW: ATR-based position sizing (0.5x when ATR > median, 1.0x when below)
     """
     close = df["close"]
     high = df["high"]
@@ -37,8 +38,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
     vol20 = daily_ret.rolling(20).std()
-    vol_median = vol20.rolling(252).median()  # 1-year median vol
-    extreme_vol = vol20 > (vol_median * 2.0)
+    vol_median_regime = vol20.rolling(252).median()  # 1-year median vol
+    extreme_vol = vol20 > (vol_median_regime * 2.0)
 
     # ADX(14) with DI
     plus_dm = high.diff()
@@ -72,19 +73,26 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
 
+    # ATR-based position sizing: smaller size when volatility is high
+    atr_pct = (atr14 / close) * 100  # ATR as % of price
+    atr_median = atr_pct.rolling(100).median()
+    high_atr = atr_pct > atr_median
+    position_size = pd.Series(1.0, index=df.index)
+    position_size[high_atr] = 0.5  # Half size in high volatility
+
     signals = pd.Series(0, index=df.index)
 
     # Primary: DI spread + uptrend + ADX confirmation + volume
-    signals[trend_up & strong_trend & di_strong_bullish & high_volume] = 1
+    signals[trend_up & strong_trend & di_strong_bullish & high_volume] = position_size
 
     # Secondary: strong ADX with moderate DI
-    signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
+    signals[trend_up & very_strong_trend & di_moderate_bullish] = position_size
 
     # BB oversold bounce in uptrend
-    signals[trend_up & (close < bb_lower)] = 1
+    signals[trend_up & (close < bb_lower)] = position_size
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.695) & strong_trend] = 1
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = position_size
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
