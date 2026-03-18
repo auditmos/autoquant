@@ -260,3 +260,4 @@ cccb41e	0.786937	0.8319	-0.1557	discard	Multi-param: Primary ADX 20.12 + DI 11.5
 6e8382b	0.786937	0.8319	-0.1557	discard	Multi-param: DI 11.5045 + BB DI 8.71
 5807b08	0.669607	0.7941	-0.1783	discard	BB dip-buy requires volume spike (>1.2x median)
 200e3de	0.775889	0.8319	-0.1557	discard	Secondary ADX 40.15 (was 40)
+5d73835	0.786937	0.8319	-0.1557	discard	Multi: Primary DI 11.5048 ADX 20.11 BB DI 8.705
