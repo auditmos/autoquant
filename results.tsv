@@ -232,3 +232,4 @@ a0eab1e	0.786937	0.8319	-0.1557	discard	BB breakout DI 8.68 (was 8.7)
 f52b1e5	0.579138	0.7524	-0.1843	discard	Exit on DI bearish crossover
 91ae1aa	0.542424	0.6787	-0.1920	discard	Dual trend filter: EMA20 + SMA51
 75ef300	0.774375	0.8319	-0.1557	discard	Add ROC(10) momentum to primary entry
+34f0646	0.785982	0.8411	-0.1557	discard	BB breakout requires band expansion
