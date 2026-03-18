@@ -8,12 +8,12 @@ import numpy as np
 
 
 def strategy(df: pd.DataFrame) -> pd.Series:
-    """Long-only: SMA50 + multi-entry ADX/DI + BB breakout + RSI(2) mean reversion.
+    """Long-only: SMA50 + multi-entry ADX/DI + BB breakout + seasonality filter.
 
     Primary: SMA50 trend + ADX>20 + DI spread>12
     Secondary: ADX>36 + DI>6 (strong trend, relaxed directional)
     BB dip-buy + BB upper breakout for momentum
-    NEW: RSI(2) oversold entry within SMA200 uptrend (mean reversion overlay)
+    NEW: Seasonality filter - avoid Mondays (historically weak)
     Regime: Go flat when realized vol is extreme (> 2x median).
     """
     close = df["close"]
@@ -21,24 +21,17 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     low = df["low"]
     volume = df["volume"]
 
-    # Trend filters
+    # Seasonality filter: avoid Monday (day 0)
+    day_of_week = pd.to_datetime(df.index).dayofweek
+    not_monday = day_of_week != 0
+
+    # Trend filter
     sma50 = close.rolling(51).mean()
     trend_up = close > sma50
-
-    sma200 = close.rolling(200).mean()
-    long_term_uptrend = close > sma200
 
     # Volume filter
     vol_median = volume.rolling(58).median()
     high_volume = volume > vol_median
-
-    # RSI(2) for mean reversion
-    delta = close.diff()
-    gain = delta.where(delta > 0, 0.0).rolling(2).mean()
-    loss = (-delta.where(delta < 0, 0.0)).rolling(2).mean()
-    rs = gain / loss.replace(0, np.nan)
-    rsi2 = 100 - (100 / (1 + rs))
-    rsi_oversold = rsi2 < 10
 
     # Bollinger Bands (20, 2)
     bb_mid = close.rolling(20).mean()
@@ -86,20 +79,17 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     signals = pd.Series(0, index=df.index)
 
-    # Primary: DI spread + uptrend + ADX confirmation + volume
-    signals[trend_up & strong_trend & di_strong_bullish & high_volume] = 1
+    # Primary: DI spread + uptrend + ADX confirmation + volume + seasonality
+    signals[trend_up & strong_trend & di_strong_bullish & high_volume & not_monday] = 1
 
-    # Secondary: strong ADX with moderate DI
-    signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
+    # Secondary: strong ADX with moderate DI + seasonality
+    signals[trend_up & very_strong_trend & di_moderate_bullish & not_monday] = 1
 
-    # BB oversold bounce in uptrend
-    signals[trend_up & (close < bb_lower)] = 1
+    # BB oversold bounce in uptrend + seasonality
+    signals[trend_up & (close < bb_lower) & not_monday] = 1
 
-    # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
-
-    # RSI(2) mean reversion: oversold dip-buy in long-term uptrend
-    signals[long_term_uptrend & rsi_oversold] = 1
+    # BB upper breakout (momentum entry with smoothed DI + ADX confirmation) + seasonality
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend & not_monday] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
