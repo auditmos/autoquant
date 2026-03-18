@@ -70,14 +70,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (EMA for faster response)
-    di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
-
-    # Stochastic Slow (14, 3) for oversold bounce
-    lowest_low = low.rolling(14).min()
-    highest_high = high.rolling(14).max()
-    stoch_k = 100 * (close - lowest_low) / (highest_high - lowest_low)
-    stoch_slow = stoch_k.rolling(3).mean()
-    stoch_oversold = stoch_slow < 30
+    di_spread_smooth = di_spread.ewm(span=2.8, adjust=False).mean()
 
     signals = pd.Series(0, index=df.index)
 
@@ -92,9 +85,6 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
     signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
-
-    # Stochastic oversold bounce in uptrend
-    signals[trend_up & stoch_oversold & strong_trend] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
