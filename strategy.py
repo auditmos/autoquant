@@ -20,10 +20,9 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     low = df["low"]
     volume = df["volume"]
 
-    # Trend filter (avoid overextended prices)
+    # Trend filter
     sma50 = close.rolling(51).mean()
     trend_up = close > sma50
-    not_overextended = (close / sma50) < 1.05
 
     # Volume filter
     vol_median = volume.rolling(58).median()
@@ -64,7 +63,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Smoothed ADX
     adx_smooth = adx.ewm(span=3, adjust=False).mean()
-    strong_trend = adx_smooth > 20.1
+    strong_trend = adx_smooth > 20.08
 
     # Secondary: very strong ADX, relaxed DI
     very_strong_trend = adx_smooth > 40
@@ -75,8 +74,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     signals = pd.Series(0, index=df.index)
 
-    # Primary: DI spread + uptrend + ADX confirmation + volume (not overextended)
-    signals[trend_up & strong_trend & di_strong_bullish & high_volume & not_overextended] = 1
+    # Primary: DI spread + uptrend + ADX confirmation + volume
+    signals[trend_up & strong_trend & di_strong_bullish & high_volume] = 1
 
     # Secondary: strong ADX with moderate DI
     signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
