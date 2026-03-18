@@ -272,3 +272,4 @@ b296fe2	0.786937	0.8319	-0.1557	discard	Primary ADX 20.095 (was 20.1)
 a562fb6	0.787261	0.8319	-0.1557	discard	Primary DI 11.506 + Secondary DI 5.95
 ff3fe46	0.787261	0.8319	-0.1557	discard	BB DI 8.695 + Secondary DI 5.95
 cccb6ef	0.730507	0.8141	-0.1452	discard	ATR position sizing (0.5x/1.0x)
+35e6ae3	0.607716	0.6309	-0.2084	discard	Add RSI(2) mean reversion overlay
