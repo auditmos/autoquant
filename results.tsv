@@ -211,3 +211,4 @@ cef6805	0.786642	0.8356	-0.1538	discard	BB breakout DI 8.69 (was 8.7)
 627b278	0.786642	0.8356	-0.1538	discard	Primary DI 11.46 + BB DI 8.72
 543abfc	0.777634	0.8356	-0.1538	discard	Vol regime window 248 (was 252)
 d2debb4	0.758629	0.8345	-0.1538	discard	Add ROC(20) momentum filter to primary
+0df8f98	0.777580	0.8356	-0.1538	discard	Volume window 59 (was 58)
