@@ -72,10 +72,6 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
 
-    # ROC(10) for momentum confirmation on dip-buys
-    roc10 = ((close - close.shift(10)) / close.shift(10)) * 100
-    positive_momentum = roc10 > 0
-
     signals = pd.Series(0, index=df.index)
 
     # Primary: DI spread + uptrend + ADX confirmation + volume
@@ -84,11 +80,12 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Secondary: strong ADX with moderate DI
     signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
 
-    # BB oversold bounce in uptrend (with ROC momentum confirmation)
-    signals[trend_up & (close < bb_lower) & positive_momentum] = 1
+    # BB oversold bounce in uptrend
+    signals[trend_up & (close < bb_lower)] = 1
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
+    # Require 1% above upper band for stronger conviction
+    signals[trend_up & (close > bb_upper * 1.01) & (di_spread_smooth > 8.7) & strong_trend] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
