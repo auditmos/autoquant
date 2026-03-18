@@ -186,3 +186,4 @@ d344c7e	0.786642	0.8356	-0.1538	discard	Primary DI 11.52 (was 11.5)
 c164512	0.781562	0.8356	-0.1538	discard	Vol regime 2.01x (was 2.0x)
 c4969f0	0.771724	0.8319	-0.1557	discard	Primary ADX 20.25 (was 20)
 1cdeab0	0.775594	0.8356	-0.1538	discard	ADX EMA span 3.1 (was 3)
+6ef0943	0.662427	1.0516	-0.1951	discard	Add Stochastic(14,3) oversold entry
