@@ -8,11 +8,11 @@ import numpy as np
 
 
 def strategy(df: pd.DataFrame) -> pd.Series:
-    """Long-only: SMA50 + multi-entry ADX/DI + BB breakout + vol filter.
+    """Long-only: SMA51 + multi-entry ADX/DI + Donchian breakout + vol filter.
 
-    Primary: SMA50 trend + ADX>20 + DI spread>12
-    Secondary: ADX>36 + DI>6 (strong trend, relaxed directional)
-    BB dip-buy + BB upper breakout for momentum
+    Primary: SMA51 trend + ADX>20.1 + DI spread>11.505
+    Secondary: ADX>40 + DI>5.95 (strong trend, relaxed directional)
+    Donchian: upper breakout (momentum) + lower bounce (mean rev)
     Regime: Go flat when realized vol is extreme (> 2x median).
     """
     close = df["close"]
@@ -28,11 +28,10 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     vol_median = volume.rolling(58).median()
     high_volume = volume > vol_median
 
-    # Bollinger Bands (20, 2)
-    bb_mid = close.rolling(20).mean()
-    bb_std = close.rolling(20).std()
-    bb_lower = bb_mid - 2 * bb_std
-    bb_upper = bb_mid + 2 * bb_std
+    # Donchian Channels (20-period)
+    dc_upper = high.rolling(20).max()
+    dc_lower = low.rolling(20).min()
+    dc_mid = (dc_upper + dc_lower) / 2
 
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
@@ -80,11 +79,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Secondary: strong ADX with moderate DI
     signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
 
-    # BB oversold bounce in uptrend
-    signals[trend_up & (close < bb_lower)] = 1
+    # Donchian upper channel breakout (momentum continuation)
+    signals[trend_up & (close > dc_upper.shift(1)) & (di_spread_smooth > 8) & strong_trend] = 1
 
-    # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.675) & strong_trend] = 1
+    # Donchian lower support bounce (mean reversion in uptrend)
+    signals[trend_up & (close < dc_lower.shift(1))] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
