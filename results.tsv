@@ -277,3 +277,4 @@ b91751c	0.787261	0.8319	-0.1557	discard	Add seasonality filter (avoid Monday)
 8047fcd	0.787261	0.8319	-0.1557	discard	Add weekly SMA20 multi-timeframe regime filter
 410cdda	0.057520	-0.0921	-0.1474	discard	Add skip-month momentum filter (12-1mo)
 4062080	0.787261	0.8319	-0.1557	discard	Regime switching: trend-following vs mean-reversion
+72b221c	0.579824	0.7524	-0.1843	discard	Remove BB dip-buy entry (simplify)
