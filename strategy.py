@@ -25,14 +25,14 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     trend_up = close > sma50
 
     # Volume filter
-    vol_median = volume.rolling(60).median()
+    vol_median = volume.rolling(62).median()
     high_volume = volume > vol_median
 
-    # Bollinger Bands (20, 2.05)
+    # Bollinger Bands (20, 2)
     bb_mid = close.rolling(20).mean()
     bb_std = close.rolling(20).std()
-    bb_lower = bb_mid - 2.05 * bb_std
-    bb_upper = bb_mid + 2.05 * bb_std
+    bb_lower = bb_mid - 2 * bb_std
+    bb_upper = bb_mid + 2 * bb_std
 
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
