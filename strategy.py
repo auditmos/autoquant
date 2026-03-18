@@ -20,9 +20,10 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     low = df["low"]
     volume = df["volume"]
 
-    # Trend filter
+    # Trend filter (avoid overextended prices)
     sma50 = close.rolling(51).mean()
     trend_up = close > sma50
+    not_overextended = (close / sma50) < 1.05
 
     # Volume filter
     vol_median = volume.rolling(58).median()
@@ -59,14 +60,14 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     adx = dx.rolling(14).mean()
 
     di_spread = plus_di - minus_di
-    di_strong_bullish = di_spread > 11.51
+    di_strong_bullish = di_spread > 11.505
 
     # Smoothed ADX
     adx_smooth = adx.ewm(span=3, adjust=False).mean()
     strong_trend = adx_smooth > 20.1
 
     # Secondary: very strong ADX, relaxed DI
-    very_strong_trend = adx_smooth > 39.9
+    very_strong_trend = adx_smooth > 40
     di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (EMA for faster response)
@@ -74,8 +75,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     signals = pd.Series(0, index=df.index)
 
-    # Primary: DI spread + uptrend + ADX confirmation + volume
-    signals[trend_up & strong_trend & di_strong_bullish & high_volume] = 1
+    # Primary: DI spread + uptrend + ADX confirmation + volume (not overextended)
+    signals[trend_up & strong_trend & di_strong_bullish & high_volume & not_overextended] = 1
 
     # Secondary: strong ADX with moderate DI
     signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
@@ -84,7 +85,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     signals[trend_up & (close < bb_lower)] = 1
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.68) & strong_trend] = 1
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0

@@ -240,3 +240,4 @@ a99f0b1	0.522612	0.5605	-0.1673	discard	Secondary requires rising ADX
 faaecb6	0.786937	0.8319	-0.1557	discard	Primary DI 11.51 (was 11.505)
 ac70f8a	0.521799	0.6065	-0.1881	discard	Add momentum spike entry (ROC5 > 2%)
 90174ce	0.727081	0.7672	-0.1579	discard	BB period 19 (was 20)
+dbe1ab6	0.765453	0.8155	-0.1633	discard	Multi-param: DI 11.51, BB DI 8.68, ADX 39.9
