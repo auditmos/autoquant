@@ -59,7 +59,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     adx = dx.rolling(14).mean()
 
     di_spread = plus_di - minus_di
-    di_strong_bullish = di_spread > 11.51
+    di_strong_bullish = di_spread > 11.505
 
     # Smoothed ADX
     adx_smooth = adx.ewm(span=3, adjust=False).mean()
@@ -71,6 +71,10 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
+
+    # Momentum spike detector
+    roc5 = (close / close.shift(5) - 1) * 100
+    momentum_spike = roc5 > 2.0
 
     signals = pd.Series(0, index=df.index)
 
@@ -85,6 +89,9 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
     signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
+
+    # Momentum spike entry (strong upward move)
+    signals[trend_up & momentum_spike & (di_spread > 5)] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
