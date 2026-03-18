@@ -309,3 +309,4 @@ bc520c7	0.726765	0.7672	-0.1579	discard	BB period 19 (was 21)
 e3caa78	0.787261	0.8319	-0.1557	discard	BB 20 + Primary DI 11.508
 3355e96	0.787261	0.8319	-0.1557	discard	Primary DI 11.504 + Secondary DI 5.945
 b151e09	0.765777	0.8155	-0.1633	discard	Multi: ADX 20.12 + Sec ADX 39.95
+1d07e47	0.787261	0.8319	-0.1557	discard	Restore ADX params
