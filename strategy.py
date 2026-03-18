@@ -28,11 +28,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     vol_median = volume.rolling(58).median()
     high_volume = volume > vol_median
 
-    # Bollinger Bands (20, 2)
+    # Bollinger Bands (20, 2.03)
     bb_mid = close.rolling(20).mean()
     bb_std = close.rolling(20).std()
-    bb_lower = bb_mid - 2 * bb_std
-    bb_upper = bb_mid + 2 * bb_std
+    bb_lower = bb_mid - 2.03 * bb_std
+    bb_upper = bb_mid + 2.03 * bb_std
 
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
@@ -67,7 +67,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     # Secondary: very strong ADX, relaxed DI
     very_strong_trend = adx_smooth > 40
-    di_moderate_bullish = di_spread > 6.1
+    di_moderate_bullish = di_spread > 6
 
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
