@@ -215,3 +215,4 @@ d2debb4	0.758629	0.8345	-0.1538	discard	Add ROC(20) momentum filter to primary
 0cd5317	0.779747	0.8356	-0.1538	discard	BB std 2.02 (was 2.0)
 73c5289	0.786937	0.8319	-0.1557	keep	Primary DI 11.505 + ADX 20.1
 3754372	0.786937	0.8319	-0.1557	discard	Primary DI 11.51 (was 11.505)
+407410e	0.769291	0.8319	-0.1557	discard	Secondary ADX 40.05 (was 40)
