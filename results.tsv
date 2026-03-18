@@ -230,3 +230,4 @@ d8da440	0.779891	0.8319	-0.1557	discard	Vol regime window 255 (was 252)
 8666945	0.765453	0.8155	-0.1633	discard	Primary DI 11.504 + Secondary ADX 39.95
 a0eab1e	0.786937	0.8319	-0.1557	discard	BB breakout DI 8.68 (was 8.7)
 f52b1e5	0.579138	0.7524	-0.1843	discard	Exit on DI bearish crossover
+91ae1aa	0.542424	0.6787	-0.1920	discard	Dual trend filter: EMA20 + SMA51
