@@ -198,3 +198,4 @@ ba80346	0.758557	0.8551	-0.1524	discard	BB breakout DI 8.74 + volume window 57
 6b58eec	0.770999	0.8191	-0.1614	discard	Primary DI 11.51 + Secondary ADX 39.9
 63d1e13	0.785967	0.8356	-0.1538	discard	Vol regime window 260 (was 252)
 550ece2	0.770699	0.8165	-0.1579	discard	BB period 21 (was 20)
+58ae68a	0.786642	0.8356	-0.1538	discard	Primary ADX 19.95 (was 20)
