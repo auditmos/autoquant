@@ -28,11 +28,13 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     vol_median = volume.rolling(58).median()
     high_volume = volume > vol_median
 
-    # Bollinger Bands (20, 2)
+    # Bollinger Bands (20, 2) with width
     bb_mid = close.rolling(20).mean()
     bb_std = close.rolling(20).std()
     bb_lower = bb_mid - 2 * bb_std
     bb_upper = bb_mid + 2 * bb_std
+    bb_width = (bb_upper - bb_lower) / bb_mid
+    bb_expanding = bb_width > bb_width.shift(1)
 
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
@@ -72,14 +74,10 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Smoothed DI for BB breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
 
-    # Short-term momentum
-    roc10 = (close / close.shift(10) - 1) * 100
-    momentum_positive = roc10 > 0
-
     signals = pd.Series(0, index=df.index)
 
-    # Primary: DI spread + uptrend + ADX confirmation + volume + momentum
-    signals[trend_up & strong_trend & di_strong_bullish & high_volume & momentum_positive] = 1
+    # Primary: DI spread + uptrend + ADX confirmation + volume
+    signals[trend_up & strong_trend & di_strong_bullish & high_volume] = 1
 
     # Secondary: strong ADX with moderate DI
     signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
@@ -87,8 +85,8 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # BB oversold bounce in uptrend
     signals[trend_up & (close < bb_lower)] = 1
 
-    # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
+    # BB upper breakout (momentum entry with smoothed DI + ADX + expansion)
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend & bb_expanding] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
