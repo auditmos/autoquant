@@ -154,3 +154,4 @@ e78542d	0.764145	0.8323	-0.1556	discard	vol regime 1.98x (was 2.0x)
 3db2419	0.782357	0.8356	-0.1538	keep	BB breakout DI 8.8 + volume window 58
 cc982cb	0.757774	0.8551	-0.1524	discard	volume window 56 (was 58)
 4a7d3f4	0.774895	0.8356	-0.1538	discard	BB breakout DI 8.9 (was 8.8)
+87fa47d	0.782357	0.8356	-0.1538	discard	primary DI 11.55 (was 11.5)
