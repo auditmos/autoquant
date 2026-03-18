@@ -8,22 +8,17 @@ import numpy as np
 
 
 def strategy(df: pd.DataFrame) -> pd.Series:
-    """Long-only: SMA50 + multi-entry ADX/DI + BB breakout + seasonality filter.
+    """Long-only: SMA50 + multi-entry ADX/DI + BB breakout + vol filter.
 
     Primary: SMA50 trend + ADX>20 + DI spread>12
     Secondary: ADX>36 + DI>6 (strong trend, relaxed directional)
     BB dip-buy + BB upper breakout for momentum
-    NEW: Seasonality filter - avoid Mondays (historically weak)
     Regime: Go flat when realized vol is extreme (> 2x median).
     """
     close = df["close"]
     high = df["high"]
     low = df["low"]
     volume = df["volume"]
-
-    # Seasonality filter: avoid Monday (day 0)
-    day_of_week = pd.to_datetime(df.index).dayofweek
-    not_monday = day_of_week != 0
 
     # Trend filter
     sma50 = close.rolling(51).mean()
@@ -79,17 +74,17 @@ def strategy(df: pd.DataFrame) -> pd.Series:
 
     signals = pd.Series(0, index=df.index)
 
-    # Primary: DI spread + uptrend + ADX confirmation + volume + seasonality
-    signals[trend_up & strong_trend & di_strong_bullish & high_volume & not_monday] = 1
+    # Primary: DI spread + uptrend + ADX confirmation + volume
+    signals[trend_up & strong_trend & di_strong_bullish & high_volume] = 1
 
-    # Secondary: strong ADX with moderate DI + seasonality
-    signals[trend_up & very_strong_trend & di_moderate_bullish & not_monday] = 1
+    # Secondary: strong ADX with moderate DI
+    signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
 
-    # BB oversold bounce in uptrend + seasonality
-    signals[trend_up & (close < bb_lower) & not_monday] = 1
+    # BB oversold bounce in uptrend
+    signals[trend_up & (close < bb_lower)] = 1
 
-    # BB upper breakout (momentum entry with smoothed DI + ADX confirmation) + seasonality
-    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend & not_monday] = 1
+    # BB upper breakout (momentum entry with smoothed DI + ADX confirmation)
+    signals[trend_up & (close > bb_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
