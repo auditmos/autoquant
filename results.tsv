@@ -236,3 +236,4 @@ f52b1e5	0.579138	0.7524	-0.1843	discard	Exit on DI bearish crossover
 2e7cf0f	0.785982	0.8411	-0.1557	discard	BB breakout DI 8.65 with expansion filter
 4536e27	0.719398	0.7787	-0.1820	discard	Volume threshold 0.9x median
 a99f0b1	0.522612	0.5605	-0.1673	discard	Secondary requires rising ADX
+590c2d6	0.762959	0.8159	-0.1696	discard	Secondary ADX 39.5 (was 40)
