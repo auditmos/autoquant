@@ -8,11 +8,11 @@ import numpy as np
 
 
 def strategy(df: pd.DataFrame) -> pd.Series:
-    """Long-only: SMA51 + multi-entry ADX/DI + Donchian breakout + vol filter.
+    """Long-only: SMA51 + multi-entry ADX/DI + Keltner breakout + vol filter.
 
     Primary: SMA51 trend + ADX>20.1 + DI spread>11.505
     Secondary: ADX>40 + DI>5.95 (strong trend, relaxed directional)
-    Donchian: upper breakout (momentum) + lower bounce (mean rev)
+    Keltner: dip-buy + upper breakout for momentum (ATR-based bands)
     Regime: Go flat when realized vol is extreme (> 2x median).
     """
     close = df["close"]
@@ -28,10 +28,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     vol_median = volume.rolling(58).median()
     high_volume = volume > vol_median
 
-    # Donchian Channels (20-period)
-    dc_upper = high.rolling(20).max()
-    dc_lower = low.rolling(20).min()
-    dc_mid = (dc_upper + dc_lower) / 2
+    # Keltner Channels (20 EMA, 2x ATR)
+    kc_mid = close.ewm(span=20, adjust=False).mean()
+    atr20 = tr.rolling(20).mean()
+    kc_lower = kc_mid - 2 * atr20
+    kc_upper = kc_mid + 2 * atr20
 
     # Volatility regime: 20-day realized vol
     daily_ret = close.pct_change()
@@ -68,7 +69,7 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     very_strong_trend = adx_smooth > 40
     di_moderate_bullish = di_spread > 5.95
 
-    # Smoothed DI for BB breakout (EMA for faster response)
+    # Smoothed DI for Keltner breakout (EMA for faster response)
     di_spread_smooth = di_spread.ewm(span=3, adjust=False).mean()
 
     signals = pd.Series(0, index=df.index)
@@ -79,11 +80,11 @@ def strategy(df: pd.DataFrame) -> pd.Series:
     # Secondary: strong ADX with moderate DI
     signals[trend_up & very_strong_trend & di_moderate_bullish] = 1
 
-    # Donchian upper channel breakout (momentum continuation)
-    signals[trend_up & (close > dc_upper.shift(1)) & (di_spread_smooth > 8) & strong_trend] = 1
+    # Keltner oversold bounce in uptrend
+    signals[trend_up & (close < kc_lower)] = 1
 
-    # Donchian lower support bounce (mean reversion in uptrend)
-    signals[trend_up & (close < dc_lower.shift(1))] = 1
+    # Keltner upper breakout (momentum entry with smoothed DI + ADX confirmation)
+    signals[trend_up & (close > kc_upper) & (di_spread_smooth > 8.7) & strong_trend] = 1
 
     # Go flat during extreme volatility
     signals[extreme_vol] = 0
